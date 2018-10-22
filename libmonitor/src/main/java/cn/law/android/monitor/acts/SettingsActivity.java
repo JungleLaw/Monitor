@@ -8,6 +8,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import cn.law.android.monitor.Constants;
@@ -105,14 +106,14 @@ public class SettingsActivity extends BaseActivity {
         Intent intent = new Intent(this, MonitorService.class);
         intent.putExtra(MonitorService.KEY, MonitorService.SHOW);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            startService(intent);
+            ContextCompat.startForegroundService(this, intent);
             mLogSwt.setEnable(true);
             mTrackerSwt.setEnable(true);
             return;
         }
 
         if (Settings.canDrawOverlays(this)) {
-            startService(intent);
+            ContextCompat.startForegroundService(this, intent);
             mLogSwt.setEnable(true);
             mTrackerSwt.setEnable(true);
             return;
@@ -125,7 +126,7 @@ public class SettingsActivity extends BaseActivity {
     private void hide() {
         Intent intent = new Intent(this, MonitorService.class);
         intent.putExtra(MonitorService.KEY, MonitorService.HIDE);
-        startService(intent);
+        ContextCompat.startForegroundService(this, intent);
         mLogSwt.setEnable(false);
         mTrackerSwt.setEnable(false);
     }
