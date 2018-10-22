@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MonitorActivityStyle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">@color/main_bg</item>
+    </style>
+
+    <style name="DividerHorizontal">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5px</item>
+    </style>
+</resources>

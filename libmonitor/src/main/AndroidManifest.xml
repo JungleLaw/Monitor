@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.law.android.monitor">
+    <!-- 最前面表示時のパーミッション -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Foreground Service permission(API level 28 or higher) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application>
+        <activity
+            android:name=".acts.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MonitorActivityStyle" />
+        <service
+            android:name=".service.MonitorService"
+            android:exported="false" />
+    </application>
+</manifest>
