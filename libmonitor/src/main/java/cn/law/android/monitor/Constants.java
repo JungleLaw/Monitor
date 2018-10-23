@@ -2,7 +2,7 @@ package cn.law.android.monitor;
 
 public class Constants {
     public static final class PrefsKey {
-        public static final String DEBUGGING = "debugging";
+//        public static final String DEBUGGING = "debugging";
 
         public static final String LOG = "log";
 

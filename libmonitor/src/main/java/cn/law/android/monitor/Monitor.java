@@ -9,39 +9,45 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import cn.law.android.monitor.acts.SettingsActivity;
+import cn.law.android.monitor.event.TrackerEvent;
 
 public class Monitor {
     private static final String TAG = Monitor.class.getName();
 
-    private static ActivityInfo activityInfo;
+//    private static ActivityInfo activityInfo;
 
     public static void install(Application app) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(app.getApplicationContext());
-        Switch.debugging = sharedPreferences.getBoolean(Constants.PrefsKey.DEBUGGING, false);
+//        Switch.debugging = sharedPreferences.getBoolean(Constants.PrefsKey.DEBUGGING, false);
         Switch.log = sharedPreferences.getBoolean(Constants.PrefsKey.LOG, false);
         Switch.tracker = sharedPreferences.getBoolean(Constants.PrefsKey.TRACKER, false);
         app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
-                activityInfo = new ActivityInfo(activity.getPackageName(), activity.getLocalClassName());
+//                activityInfo = new ActivityInfo(activity.getPackageName(), activity.getLocalClassName());
                 Log.d(TAG, "Switch.debugging = " + Switch.debugging + ",Switch.tracker = " + Switch.tracker);
                 if (Switch.debugging && Switch.tracker) {
-                    Log.d(TAG, activityInfo.packageName + "." + activityInfo.compenentName);
+                    Log.d(TAG, activity.getPackageName() + "." + activity.getLocalClassName());
+                    EventBus.getDefault().post(new TrackerEvent(activity.getPackageName() + "." + activity.getLocalClassName()));
                 }
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
                 if (Switch.debugging && Switch.tracker) {
-                    Log.d(TAG, activityInfo.packageName + "." + activityInfo.compenentName);
+                    Log.d(TAG, activity.getPackageName() + "." + activity.getLocalClassName());
+                    EventBus.getDefault().post(new TrackerEvent(activity.getPackageName() + "." + activity.getLocalClassName()));
                 }
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
                 if (Switch.debugging && Switch.tracker) {
-                    Log.d(TAG, activityInfo.packageName + "." + activityInfo.compenentName);
+                    Log.d(TAG, activity.getPackageName() + "." + activity.getLocalClassName());
+                    EventBus.getDefault().post(new TrackerEvent(activity.getPackageName() + "." + activity.getLocalClassName()));
                 }
             }
 

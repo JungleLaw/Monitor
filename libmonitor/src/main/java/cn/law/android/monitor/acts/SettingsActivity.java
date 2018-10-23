@@ -52,10 +52,10 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        boolean debugging = mSharedPreferences.getBoolean(Constants.PrefsKey.DEBUGGING, false);
-        mDebuggingSwt.setChecked(debugging);
-        mLogSwt.setEnable(debugging);
-        mTrackerSwt.setEnable(debugging);
+//        boolean debugging = mSharedPreferences.getBoolean(Constants.PrefsKey.DEBUGGING, false);
+        mDebuggingSwt.setChecked(Switch.debugging);
+        mLogSwt.setEnable(Switch.debugging);
+        mTrackerSwt.setEnable(Switch.debugging);
         mLogSwt.setChecked(mSharedPreferences.getBoolean(Constants.PrefsKey.LOG, false));
         mTrackerSwt.setChecked(mSharedPreferences.getBoolean(Constants.PrefsKey.TRACKER, false));
         mDebuggingSwt.setCallback(new Option.Callback() {
@@ -66,7 +66,6 @@ public class SettingsActivity extends BaseActivity {
                 } else {
                     hide();
                 }
-
             }
         });
     }
@@ -77,7 +76,6 @@ public class SettingsActivity extends BaseActivity {
         Switch.log = mLogSwt.isChecked();
         Switch.tracker = mTrackerSwt.isChecked();
         mSharedPreferences.edit()
-                .putBoolean(Constants.PrefsKey.DEBUGGING, mDebuggingSwt.isChecked())
                 .putBoolean(Constants.PrefsKey.LOG, mLogSwt.isChecked())
                 .putBoolean(Constants.PrefsKey.TRACKER, mTrackerSwt.isChecked())
                 .apply();
@@ -90,11 +88,16 @@ public class SettingsActivity extends BaseActivity {
         if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(this)) {
+                    Switch.debugging = false;
                     mDebuggingSwt.setChecked(false);
                     mLogSwt.setEnable(false);
                     mTrackerSwt.setEnable(false);
                     Toast.makeText(this, "open fail", Toast.LENGTH_SHORT).show();
                 } else {
+                    Switch.debugging = true;
+                    mDebuggingSwt.setChecked(true);
+                    mLogSwt.setEnable(true);
+                    mTrackerSwt.setEnable(true);
                     show();
                 }
             }
@@ -106,14 +109,16 @@ public class SettingsActivity extends BaseActivity {
         Intent intent = new Intent(this, MonitorService.class);
         intent.putExtra(MonitorService.KEY, MonitorService.SHOW);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            ContextCompat.startForegroundService(this, intent);
+//            ContextCompat.startForegroundService(this, intent);
+            startService(intent);
             mLogSwt.setEnable(true);
             mTrackerSwt.setEnable(true);
             return;
         }
 
         if (Settings.canDrawOverlays(this)) {
-            ContextCompat.startForegroundService(this, intent);
+//            ContextCompat.startForegroundService(this, intent);
+            startService(intent);
             mLogSwt.setEnable(true);
             mTrackerSwt.setEnable(true);
             return;
@@ -126,7 +131,8 @@ public class SettingsActivity extends BaseActivity {
     private void hide() {
         Intent intent = new Intent(this, MonitorService.class);
         intent.putExtra(MonitorService.KEY, MonitorService.HIDE);
-        ContextCompat.startForegroundService(this, intent);
+//        ContextCompat.startForegroundService(this, intent);
+        startService(intent);
         mLogSwt.setEnable(false);
         mTrackerSwt.setEnable(false);
     }

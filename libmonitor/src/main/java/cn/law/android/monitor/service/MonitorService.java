@@ -3,6 +3,8 @@ package cn.law.android.monitor.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -10,16 +12,23 @@ import android.view.View;
 import android.view.WindowManager;
 
 import cn.law.android.monitor.R;
+import cn.law.android.monitor.view.Console;
 
 public class MonitorService extends Service {
     public static final String KEY = "k";
     public static final String SHOW = "show";
     public static final String HIDE = "hide";
 
+    private Console mConsole;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println(intent.getStringExtra(KEY));
-        show();
+        if (intent.getStringExtra(KEY).equals(SHOW)) {
+            show();
+        } else {
+            hide();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -30,18 +39,17 @@ public class MonitorService extends Service {
     }
 
     private void show() {
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.type = WindowManager.LayoutParams.TYPE_PHONE;
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-        params.width = 200;
-        params.height = 200;
-        params.gravity = Gravity.START | Gravity.TOP;
-        View view = View.inflate(this, R.layout.layout_test, null);
-        wm.addView(view, params);
+        if (mConsole == null) {
+            mConsole = new Console(this);
+            mConsole.show();
+        }
     }
 
     private void hide() {
-
+        if (mConsole != null) {
+            mConsole.hide();
+            mConsole = null;
+            stopSelf();
+        }
     }
 }
