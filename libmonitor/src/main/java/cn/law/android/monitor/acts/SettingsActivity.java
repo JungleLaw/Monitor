@@ -8,11 +8,9 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import cn.law.android.monitor.Constants;
-import cn.law.android.monitor.Monitor;
 import cn.law.android.monitor.R;
 import cn.law.android.monitor.Switch;
 import cn.law.android.monitor.base.BaseActivity;
